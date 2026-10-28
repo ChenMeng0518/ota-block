@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ConsentText</key>
+	<dict>
+		<key>default</key>
+		<string>本描述文件仅添加一条 DNS 规则：把 gdmf.apple.com 的解析交给一个不存在的主机名（ota.invalid，RFC 2606 保留域），从而让系统更新检查失败。
+
+不包含证书、VPN 隧道或代理配置，无法拦截或篡改其它任何流量。源码见仓库，可自行核对后生成。</string>
+	</dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>DNSSettings</key>
+			<dict>
+				<key>DNSProtocol</key>
+				<string>HTTPS</string>
+				<key>ServerURL</key>
+				<string>https://ota.invalid</string>
+				<key>SupplementalMatchDomains</key>
+				<array>
+					<string>gdmf.apple.com</string>
+				</array>
+			</dict>
+			<key>OnDemandRules</key>
+			<array>
+				<dict>
+					<key>Action</key>
+					<string>Connect</string>
+				</dict>
+			</array>
+			<key>PayloadDescription</key>
+			<string>将 gdmf.apple.com 的解析重定向到一个不存在的主机，使系统更新检查无法获取固件清单。</string>
+			<key>PayloadDisplayName</key>
+			<string>OTA Update Blocker (DNS)</string>
+			<key>PayloadIdentifier</key>
+			<string>dev.chenmeng0518.otablocker.dns</string>
+			<key>PayloadType</key>
+			<string>com.apple.dnsSettings.managed</string>
+			<key>PayloadUUID</key>
+			<string>73FB5E2E-8972-5030-BBD2-945F58B80EB4</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>屏蔽 iOS OTA 系统更新。仅影响 gdmf.apple.com 的解析，其余网络请求不受影响。无有效期，删除本描述文件即可恢复更新。</string>
+	<key>PayloadDisplayName</key>
+	<string>OTA Update Blocker</string>
+	<key>PayloadIdentifier</key>
+	<string>dev.chenmeng0518.otablocker</string>
+	<key>PayloadOrganization</key>
+	<string>chenmeng0518</string>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>3B2BA8E9-CC22-5876-97CE-7BB422CA008D</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>
