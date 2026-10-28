@@ -55,17 +55,35 @@ iOS 检查系统更新时，会向 Apple 的软件更新清单服务 `gdmf.apple
 
 不需要联网，也不需要签名。签名只在 MDM 强制推送时才有要求。
 
-### 方式二：raw 直链
+### 方式二：Release 直链（推荐）
 
 用设备 Safari 打开：
+
+```
+https://github.com/ChenMeng0518/ota-block/releases/download/v1.0.0/block-ota.mobileconfig
+```
+
+响应头是 `content-type: application/octet-stream` 加 `content-disposition: attachment`，Safari 一定当附件下载，不会把 XML 渲染成文本。
+
+### 方式三：jsDelivr 镜像
+
+```
+https://cdn.jsdelivr.net/gh/ChenMeng0518/ota-block@main/block-ota.mobileconfig
+```
+
+返回 `application/octet-stream`。缺点是 CDN 有缓存，改了文件之后可能过一段时间才生效。
+
+### 关于 raw 直链（不推荐）
 
 ```
 https://raw.githubusercontent.com/ChenMeng0518/ota-block/main/block-ota.mobileconfig
 ```
 
-GitHub raw 对该扩展名返回 `application/octet-stream`，Safari 会下载而不是当文本渲染。
+**这个路径返回 `text/plain; charset=utf-8`**。因为本文件是纯 XML 文本，GitHub 会按文本类型下发，Safari 有可能把整段 plist 直接渲染成页面而不是提示安装。文本内容的 `.mobileconfig` 走 raw 都有这个毛病；网上那些 raw 链接能用，通常是因为文件经过了 CMS 签名、变成二进制，GitHub 才认成 `octet-stream`。
 
-### 方式三：本机临时服务
+所以直链请用上面的 Release 地址。
+
+### 方式四：本机临时服务
 
 ```bash
 python3 -m http.server 8000
