@@ -1,0 +1,10 @@
+name = "ota-block"
+main = "worker.js"
+compatibility_date = "2026-10-28"
+
+# 把 .mobileconfig 当作纯文本资源导入，供 worker.js 里 import 使用。
+# 这样仓库里的 block-ota.mobileconfig 是唯一真相，Worker 不另存副本。
+[[rules]]
+type = "Text"
+globs = ["**/*.mobileconfig"]
+fallthrough = true

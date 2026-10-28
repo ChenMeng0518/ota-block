@@ -92,6 +92,39 @@ python3 -m http.server 8000
 
 ---
 
+## 自建分发（国内访问）
+
+GitHub 的 Release 和 raw 在国内都不稳定，`release-assets.githubusercontent.com` 经常连不上。仓库里带了一个 Cloudflare Worker，用自己的域名分发，响应头精确可控。
+
+`worker.js` 不硬编码文件内容，而是通过 `wrangler.toml` 的 `rules` 段把 `block-ota.mobileconfig` 作为 Text 模块导入，所以仓库里只有一份真相。
+
+部署需要 Node 和 Cloudflare 账号：
+
+```bash
+npx wrangler@4 login      # 或直接设 CLOUDFLARE_API_TOKEN
+npx wrangler@4 deploy
+```
+
+然后在 Cloudflare 面板给这个 Worker 加一个 Custom Domain（例如 `ota.example.com`），Cloudflare 会自动建 DNS 记录。不需要备案，因为节点在境外。
+
+部署后的路径：
+
+| 路径 | 作用 |
+|---|---|
+| `/block-ota.mobileconfig` | 描述文件，`application/octet-stream` + `attachment` |
+| `/sha256` | 返回实际下发内容的 SHA-256，用于核对 |
+| `/` | 纯文本使用说明 |
+
+本地可以先验证再上线：
+
+```bash
+npx wrangler@4 dev --port 8787
+curl -s http://127.0.0.1:8787/block-ota.mobileconfig | sha256sum
+```
+
+
+---
+
 ## 验收标准（必须实测）
 
 装完重启，进入 **设置 → 通用 → 软件更新**：
